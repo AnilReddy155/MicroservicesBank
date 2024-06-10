@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <a class="navbar-brand" href="#">Standard Charter Bank</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-lg" th:href="@{/customer/operations}">Back to Operations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-lg" th:href="@{/customer/account}">Main Menu</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-lg" th:href="@{/customer/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1>Last 10 Transactions</h1>
+                <p>Account Number: <span th:text="${accountNumber}"></span></p>
+            </div>
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Count</th>
+                    <th>Transaction ID</th>
+                    <th>Transaction Type</th>
+                    <th>Status</th>
+                    <th>Transaction Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="transaction, iterStat : ${transactionsList}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${transaction.trnxId}"></td>
+                    <td th:text="${transaction.type}"></td>
+                    <td th:text="${transaction.status}"></td>
+                    <td th:text="${transaction.amount}"></td>
+                    <td th:text="${transaction.timestamp}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

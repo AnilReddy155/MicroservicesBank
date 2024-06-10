@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Error</title>
+	<link rel="stylesheet" th:href="@{/css/styles.css}">
+	<style>
+		.container {
+			margin-top: 20px;
+		}
+
+		h1 {
+			color: red;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="d-flex justify-content-between align-items-center my-3">
+	    <div></div>
+		<div>
+			<a th:href="@{/customer/account}" class="btn btn-primary">Main Menu</a>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h1>Oops! An error occurred.</h1>
+		<p>We apologize for the inconvenience. Please try again later.</p>
+		<p>If the problem persists, please contact our customer support.</p>
+	</div>
+</body>
+
+</html>

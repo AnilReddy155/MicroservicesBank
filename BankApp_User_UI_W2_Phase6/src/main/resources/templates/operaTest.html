@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Banking Operations</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+	<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<div class="container">
+	<nav>
+    	<h2>Banking Operations</h2>
+	    <p>Welcom, <span th:text="${userName}">User</span>!</p>
+		<a th:href="@{/customer/account}">Main Menu</a>
+	</nav>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="check-balance-tab" data-toggle="tab" href="#check-balance" role="tab" aria-controls="check-balance" aria-selected="true">Check Balance</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="withdraw-tab" data-toggle="tab" href="#withdraw" role="tab" aria-controls="withdraw" aria-selected="false">Withdraw</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="deposit-tab" data-toggle="tab" href="#deposit" role="tab" aria-controls="deposit" aria-selected="false">Deposit</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="transfer-tab" data-toggle="tab" href="#transfer" role="tab" aria-controls="transfer" aria-selected="false">Transfer</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="check-balance" role="tabpanel" aria-labelledby="check-balance-tab">
+            <a th:href="@{/customer/balance}">Check Balance</a>
+        </div>
+        <div class="tab-pane fade" id="withdraw" role="tabpanel" aria-labelledby="withdraw-tab">
+            <h3>Withdraw</h3>
+            <form th:action="@{/customer/withdraw}" method="post">
+                <div class="form-group">
+                    <label for="withdrawAmount">Amount:</label>
+                    <input type="number" id="withdrawAmount" name="amount" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Withdraw</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="deposit" role="tabpanel" aria-labelledby="deposit-tab">
+            <h3>Deposit</h3>
+            <form th:action="@{/customer/deposit}" method="post">
+                <div class="form-group">
+                    <label for="depositAmount">Amount:</label>
+                    <input type="number" id="depositAmount" name="amount" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Deposit</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="transfer" role="tabpanel" aria-labelledby="transfer-tab">
+            <h3>Transfer</h3>
+            <form th:action="@{/customer/transfer}" method="post">
+                <div class="form-group">
+                    <label for="transferAmount">Amount:</label>
+                    <input type="number" id="transferAmount" name="amount" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="transferAccount">To Account:</label>
+                    <input type="text" id="transferAccount" name="account" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Transfer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

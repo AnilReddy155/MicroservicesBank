@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Deposit Money</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <a class="navbar-brand" href="#">Standard Charter Bank</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-lg" th:href="@{/customer/operations}">Back to Operations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-lg" th:href="@{/customer/account}">Main Menu</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-lg" th:href="@{/customer/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <h1 class="mb-4">Deposit Money</h1>
+
+        <div class="container">
+            <div th:if="${error}">
+                <div class="alert alert-danger">
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
+
+            <form action="deposit" method="post" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="amount" class="sr-only">Amount:</label>
+                    <input type="number" id="amount" name="amount" class="form-control" placeholder="Enter amount" required>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2 ml-2">Deposit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

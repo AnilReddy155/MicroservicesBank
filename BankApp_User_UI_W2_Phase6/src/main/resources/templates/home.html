@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bank Home</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to SCB Bank</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a th:href="@{/customer/login}">Login</a>
+           <a th:href="@{/customer/register}">Register</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Your Trusted Banking Partner</h2>
+        <p>Welcome to SCB bank. We offer the best services for your financial needs.</p>
+    </main>
+	
+</body>
+</html>

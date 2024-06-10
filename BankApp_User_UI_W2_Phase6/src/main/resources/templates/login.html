@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Login</title>
+	<link rel="stylesheet" th:href="@{/css/styles.css}">
+	<link rel="stylesheet" type="text/css"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+
+<body>
+	<header>
+		<h1>Login to Your Account</h1>
+	</header>
+	<main>
+		<form th:action="@{/customer/home}" method="post">
+			<div>
+				<label for="username">Username:</label>
+				<input type="text" id="userName" name="userName" required>
+			</div>
+			<div>
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="password" required>
+			</div>
+			<div>
+				<button type="submit">Login</button>
+			</div>
+			<div th:if="${error}">
+				<div class="alert alert-danger">
+					<span th:text="${error}"></span>
+				</div>
+			</div>
+		</form>
+		<p>Don't have an account? <a th:href="@{/customer/register}">Register here</a></p>
+	</main>
+</body>
+
+</html>

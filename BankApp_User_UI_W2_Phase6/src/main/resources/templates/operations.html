@@ -1,0 +1,28 @@
+<!-- create a html for Banking UI after login show Check Balance, Deposit, Withdraw, Transfer, Logout with nice styles-->
+<!-- create a html for Banking UI after login show Check Balance, Deposit, Withdraw, Transfer, Logout with nice styles-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Bank Home</title>
+	<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+	<header>
+		<h1>Bank Operations</h1>
+		<nav>
+			<a th:href="@{/customer/account}">Main Menu</a>
+			<a th:href="@{/customer/balance}">Check Balance</a>
+			<a th:href="@{/customer/withdraw}">Withdraw Amount</a>
+			<a th:href="@{/customer/deposit}">Deposit Amount</a>
+			<a th:href="@{/customer/transfer}">Transfer Amount</a>
+			<a th:href="@{/customer/transactions}">Disaply Last 10 Transactions</a>
+			
+
+		</nav>
+	</header>
+
+</body>
+
+</html>
