@@ -7,13 +7,7 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-      routes:
-        - id: bank-account-service
-          uri: lb://account-service
-          predicates:
-            - Path=scb/**
-          filters:
-            - StripPrefix=1
+      
 
 server:
   port: 8081

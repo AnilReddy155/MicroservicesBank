@@ -17,8 +17,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.cg.bms.exception.GlobalException;
 import com.cg.bms.model.Account;
 import com.cg.bms.model.Customer;
+import com.cg.bms.model.DepositRequest;
 import com.cg.bms.model.ErrorResponse;
 import com.cg.bms.model.Transaction;
+import com.cg.bms.model.TransferRequest;
+import com.cg.bms.model.WithdrawRequest;
+import com.cg.bms.service.BankCustService;
 import com.cg.bms.service.BankCustomerService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +35,9 @@ public class BankingCustomerController {
 	private static final Logger logger = LoggerFactory.getLogger(BankingCustomerController.class);
 
 	@Autowired
-	private BankCustomerService bankCustomerService;
+	private BankCustService bankCustomerService;
+	
+	
 
 	@PostMapping("/home")
 	public String validateLoginForm(@ModelAttribute Customer customer, Model model, HttpServletRequest request) {
@@ -67,7 +73,9 @@ public class BankingCustomerController {
 			Account account = (Account) request.getSession().getAttribute("account");
 			Long accountNumbe = account.getAccountNumber();
 			System.out.println("accountNumber : " + accountNumbe);
-			ResponseEntity<Account> responseEntity = bankCustomerService.withdraw(accountNumbe, amount);
+			WithdrawRequest withdrawRequest = new WithdrawRequest();
+			withdrawRequest.setAmount(amount);
+			ResponseEntity<Account> responseEntity = bankCustomerService.withdraw(accountNumbe, withdrawRequest);
 			if(responseEntity.getStatusCode().is2xxSuccessful())
 				request.getSession().setAttribute("account", account);
 			
@@ -86,7 +94,9 @@ public class BankingCustomerController {
 			Account account = (Account) request.getSession().getAttribute("account");
 			Long accountNumbe = account.getAccountNumber();
 			System.out.println("accountNumber : " + accountNumbe);
-			account = bankCustomerService.deposit(accountNumbe, amount);
+			DepositRequest depositRequest = new DepositRequest();
+			depositRequest.setAmount(amount);
+			account = bankCustomerService.deposit(accountNumbe, depositRequest);
 			request.getSession().setAttribute("account", account);
 			model.addAttribute("transaction", "Deposit");
 		} catch (HttpClientErrorException ex) {
@@ -106,7 +116,10 @@ public class BankingCustomerController {
 			Long accountNumbe = account.getAccountNumber();
 			System.out.println("accountNumber : " + accountNumbe);
 			System.out.println("destAccNum : " + destAccNum + " amount : " + amount);
-			account = bankCustomerService.transfer(accountNumbe, destAccNum, amount);
+			TransferRequest transferRequest = new TransferRequest();
+			transferRequest.setAmount(amount);
+			transferRequest.setTargetAccount(destAccNum);
+			account = bankCustomerService.transfer(accountNumbe, transferRequest);
 			request.getSession().setAttribute("account", account);
 			model.addAttribute("transaction", "Transfered");
 
