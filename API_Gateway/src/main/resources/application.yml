@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: api-gatway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: bank-account-service
+          uri: lb://account-service
+          predicates:
+            - Path=scb/**
+          filters:
+            - StripPrefix=1
+
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+# spring.cloud.gateway.discovery.locator.enabled=true
+#spring.cloud.gateway.discovery.locator.lower-case-service-id=true
