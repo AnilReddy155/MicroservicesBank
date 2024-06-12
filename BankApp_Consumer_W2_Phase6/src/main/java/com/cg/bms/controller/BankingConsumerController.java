@@ -18,6 +18,7 @@ import com.cg.bms.dto.TransactionDto;
 import com.cg.bms.model.DepositRequest;
 import com.cg.bms.model.TransferRequest;
 import com.cg.bms.model.WithdrawRequest;
+import com.cg.bms.service.BankConsumerService;
 import com.cg.bms.service.BankingConsumerService;
 import com.cg.bms.validation.AccountNumberValidation;
 
@@ -33,11 +34,14 @@ public class BankingConsumerController {
 
 	@Autowired
 	private BankingConsumerService bankingConsumerService;
+	
+	@Autowired
+	private BankConsumerService bankConsumerService;
 
 	// create endpoint to get account balance
 	@GetMapping("/{accountNumber}/balance")
 	public Double getBalance(@Valid @AccountNumberValidation(min = 10) @PathVariable Long accountNumber) {
-		return bankingConsumerService.getBalance(accountNumber);
+		return bankConsumerService.getBalance(accountNumber);
 	}
 
 	// create endpoint to deposit amount

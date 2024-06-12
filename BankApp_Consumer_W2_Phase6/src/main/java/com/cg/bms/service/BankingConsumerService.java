@@ -3,15 +3,10 @@ package com.cg.bms.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.RestTemplate;
 
-import com.cg.bms.config.PropertiesConfiguration;
 import com.cg.bms.dto.AccountDto;
 import com.cg.bms.dto.CustomerDto;
 import com.cg.bms.dto.TransactionDto;
@@ -22,19 +17,34 @@ import com.cg.bms.model.WithdrawRequest;
 @Service
 public class BankingConsumerService {
 
-	@Autowired
-	private RestTemplate restTemplate;
+	// @Autowired
+	// private RestTemplate restTemplate;
+
+	// @Autowired
+	// private PropertiesConfiguration properties;
 
 	@Autowired
-	private PropertiesConfiguration properties;
+	private BankCustomerService bankCustomerService;
+
+	@Autowired
+	private BankConsumerService bankConsumerService;
+
+	@Autowired
+	private BankTransactionService bankTransactionService;
 
 	public Double getBalance(Long accountNumber) {
-		return restTemplate.getForObject(properties.getAccountUri() + accountNumber + "/balance", Double.class);
+		// return restTemplate.getForObject(properties.getAccountUri() + accountNumber +
+		// "/balance", Double.class);
+		return bankConsumerService.getBalance(accountNumber);
 	}
 
 	public ResponseEntity<AccountDto> deposit(Long accountNumber, DepositRequest depositRequest) {
-		ResponseEntity<AccountDto> responseEntity = restTemplate.postForEntity(
-				properties.getAccountUri() + accountNumber + "/deposit", depositRequest, AccountDto.class);
+		/*
+		 * ResponseEntity<AccountDto> responseEntity = restTemplate.postForEntity(
+		 * properties.getAccountUri() + accountNumber + "/deposit", depositRequest,
+		 * AccountDto.class);
+		 */
+		ResponseEntity<AccountDto> responseEntity = bankConsumerService.deposit(accountNumber, depositRequest);
 		if (responseEntity.getStatusCode().is2xxSuccessful()) {
 			TransactionDto transaction = new TransactionDto();
 			transaction.setAccountNumber(accountNumber);
@@ -55,10 +65,15 @@ public class BankingConsumerService {
 
 	}
 
-	@PostMapping("/{accountNumber}/withdraw")
 	public ResponseEntity<AccountDto> withdraw(Long accountNumber, WithdrawRequest withdrawRequest) {
-		ResponseEntity<AccountDto> responseEntity = restTemplate.postForEntity(
-				properties.getAccountUri() + accountNumber + "/withdraw", withdrawRequest, AccountDto.class);
+		/*
+		 * ResponseEntity<AccountDto> responseEntity = restTemplate.postForEntity(
+		 * properties.getAccountUri() + accountNumber + "/withdraw", withdrawRequest,
+		 * AccountDto.class);
+		 */
+
+		ResponseEntity<AccountDto> responseEntity = bankConsumerService.withdraw(accountNumber, withdrawRequest);
+
 		if (responseEntity.getStatusCode().is2xxSuccessful()) {
 			TransactionDto transaction = new TransactionDto();
 			transaction.setAccountNumber(accountNumber);
@@ -83,8 +98,13 @@ public class BankingConsumerService {
 
 	public ResponseEntity<AccountDto> transfer(Long fromAccountNumber, TransferRequest transferRequest) {
 		System.out.println("fromAccountNumber : " + fromAccountNumber + " transferRequest : " + transferRequest);
-		ResponseEntity<AccountDto> responseEntity = restTemplate.postForEntity(
-				properties.getAccountUri() + fromAccountNumber + "/transfer", transferRequest, AccountDto.class);
+		/*
+		 * ResponseEntity<AccountDto> responseEntity = restTemplate.postForEntity(
+		 * properties.getAccountUri() + fromAccountNumber + "/transfer",
+		 * transferRequest, AccountDto.class);
+		 */
+
+		ResponseEntity<AccountDto> responseEntity = bankConsumerService.transfer(fromAccountNumber, transferRequest);
 		if (responseEntity.getStatusCode().is2xxSuccessful()) {
 			saveTransaction(fromAccountNumber, transferRequest, "Success");
 
@@ -111,20 +131,30 @@ public class BankingConsumerService {
 	}
 
 	public ResponseEntity<List<TransactionDto>> getTransactions(Long accountNumber) {
-		return restTemplate.exchange(properties.getTransactionUri() + accountNumber + "/last10", HttpMethod.GET, null,
-				new ParameterizedTypeReference<List<TransactionDto>>() {
-				});
+		/*
+		 * return restTemplate.exchange(properties.getTransactionUri() + accountNumber +
+		 * "/last10", HttpMethod.GET, null, new
+		 * ParameterizedTypeReference<List<TransactionDto>>() { });
+		 */
+		return bankTransactionService.getTransactions(accountNumber);
 	}
 
 	public ResponseEntity<TransactionDto> addTransaction(TransactionDto transaction) {
-		return restTemplate.postForEntity(properties.getTransactionUri() + "/add", transaction, TransactionDto.class);
+		// return restTemplate.postForEntity(properties.getTransactionUri() + "/add",
+		// transaction, TransactionDto.class);
+		return bankTransactionService.addTransaction(transaction);
 	}
-	
+
 	public CustomerDto findByUserNameAndPassword(@RequestBody CustomerDto customerDto) {
-		return restTemplate.postForObject(properties.getCustomerUri()+"/login", customerDto, CustomerDto.class);
+		// return restTemplate.postForObject(properties.getCustomerUri()+"/login",
+		// customerDto, CustomerDto.class);
+		return bankCustomerService.findByUserNameAndPassword(customerDto);
 	}
 
 	public ResponseEntity<AccountDto> getAccountByCustId(Long custId) {
-		return restTemplate.getForEntity(properties.getAccountUri()+"/customer/"+custId, AccountDto.class);
+		// return
+		// restTemplate.getForEntity(properties.getAccountUri()+"/customer/"+custId,
+		// AccountDto.class);
+		return bankConsumerService.getAccountByCustId(custId);
 	}
 }
