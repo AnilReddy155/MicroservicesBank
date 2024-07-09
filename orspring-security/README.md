@@ -28,3 +28,6 @@
 	server.ssl.key-store=classpath:certificate.p12
 	server.ssl.key-store-password=12345 // this is the password you given when executing above commands
  
+
+ **Some Spring Security Configurations**
+    SpringBootWebSecurityConfiguration : which have a configuration for basic configration.
