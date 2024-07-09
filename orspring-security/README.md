@@ -1,5 +1,6 @@
 
 **Basic Authentication:**
+    https://github.com/eazybytes/springsecurity6
 
 1. Write one API which returns String and add security dependency.
 2. Run the application, You can see the password created in consol. default user us user.
