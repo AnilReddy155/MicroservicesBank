@@ -30,4 +30,85 @@
  
 
  **Some Spring Security Configurations**
-    SpringBootWebSecurityConfiguration : which have a configuration for basic configration.
+    SpringBootWebSecurityConfiguration : which have a configuration for basic configration. (SecurityFilterChain) will be returned as bean.
+    
+    @Bean
+	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests((requests) -> requests.requestMatchers("/hello").authenticated().requestMatchers("/demo").permitAll());
+		http.formLogin(withDefaults());
+		http.httpBasic(withDefaults());
+		return http.build();
+	}
+
+ **Spring default schema tables structure**
+    create table users(
+        username varchar(50) not null primary key,
+        password varchar(50) not null,
+        enabled boolean not null
+    );
+
+    create table authorities (
+        username varchar(50) not null,
+        authority varchar(50) not null,
+        constraint fk_authorities_users foreign key(username) references users(username)
+    );
+    create unique index ix_auth_username on authorities (username,authority);
+
+    insert into users values('Suneel', '12345', '1');
+
+    insert into authorities values ('Suneel', 'write');   
+
+    **Code**
+     @Bean
+	UserDetailsService jdbcUserDetailsService(DataSource dataSource) {
+		return new JdbcUserDetailsManager(dataSource);
+	}
+	
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return NoOpPasswordEncoder.getInstance();
+	}
+
+**Custome Schema Configuration**
+    `create table sec.customer (
+        id bigint not null,
+        email varchar(255),
+        password varchar(255),
+        role varchar(255),
+        primary key (id)
+    )
+	
+	insert into sec.customer values (1, 'anil@email.com', 123, 'read');`
+
+    **Code**
+
+    package com.cg.security.service;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.security.core.authority.SimpleGrantedAuthority;
+    import org  .springframework.security.core.userdetails.User;
+    import org.springframework.security.core.userdetails.UserDetails;
+    import org.springframework.security.core.userdetails.UserDetailsService;
+    import org.springframework.security.core.userdetails.UsernameNotFoundException;
+    import org.springframework.stereotype.Service;
+
+    import com.cg.security.entity.Customer;
+    import com.cg.security.repository.CustomerRepo;
+
+    @Service
+    public class CustomUserDetailsServiceImpl implements UserDetailsService{
+
+        @Autowired
+        private CustomerRepo customerRepo;
+        
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            Customer customer = customerRepo.findByEmail(username);
+            if(customer == null) {
+                throw new UsernameNotFoundException("User Not found");
+            }
+            return User.withUsername(customer.getEmail()).password(customer.getPassword())
+            .authorities(new SimpleGrantedAuthority(customer.getRole())).build();
+        }
+
+    }
