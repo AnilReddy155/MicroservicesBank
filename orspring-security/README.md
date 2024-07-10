@@ -12,6 +12,16 @@
 ![alt text](image.png)
 
 
+**Spring Security Flow**
+    **Filters** : SecurityFilterChain is used for defining the autherization (which is url is accessible publicly or which request are authenticated). there are many filters available.
+
+    **AuthenticationManager** : It will take the help of AuthenticationProvider to authenticate the request. ProviderManager is one of the implementation.
+
+    **AuthenticationProvider** : It will read the user details from the UserDetailsService and it wil process for Authentication. it requires passwordEncoder to hash the password.
+
+    **UserDetailsService** : Rsponsible for Reading the data from the destination (DB , LDAP ect..)
+
+
 **To Enable Https:**
 
 	Windows:
@@ -123,3 +133,76 @@
 	}
 
     While we are saving the password into DB we need to encode the password and need to store.
+
+
+**Custome User Details Service**
+    in Production application we need to read the users from DB. in that case we need to write our own UserDetailsService like below.
+
+    @Service
+    public class CustomUserDetailsServiceImpl implements UserDetailsService{
+
+        @Autowired
+        private CustomerRepo customerRepo;
+        
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            Customer customer = customerRepo.findByEmail(username);
+            if(customer == null) {
+                throw new UsernameNotFoundException("User Not found");
+            }
+            return User.withUsername(customer.getEmail()).password(customer.getPassword())
+            .authorities(new SimpleGrantedAuthority(customer.getRole())).build();
+        }
+
+    }
+
+ **Custome Authentication Provider**
+    In case any change in Authentication logic provided by Spring framwork we need to write custome logic like below.
+    Ex: Based on the age or any other factore we need to consider for Authentication.
+
+    @Component
+    public class CustomAuthenticationProvider implements AuthenticationProvider{
+
+        @Autowired
+        private CustomerRepo customerRepo;
+        
+        @Autowired
+        private PasswordEncoder passwordEncoder;
+        
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            
+            String userName = authentication.getName();
+            
+            String pwd = authentication.getCredentials().toString();
+            
+            Customer customer = customerRepo.findByEmail(userName);
+            
+            if(customer != null) {
+                
+                if(passwordEncoder.matches(pwd, customer.getPassword())) {
+                    
+                    List<GrantedAuthority> authorities = new ArrayList<>();
+                    
+                    authorities.add(new SimpleGrantedAuthority(customer.getRole()));
+                    
+                    return new UsernamePasswordAuthenticationToken(userName, pwd, authorities);
+                } else {
+                    throw new BadCredentialsException("Invalid pwd..");
+                }
+                
+            } else {
+                throw new BadCredentialsException("Username not found");
+            }
+        }
+
+        // which type of Authentication object is supports.
+        @Override
+        public boolean supports(Class<?> authentication) {
+            return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+        }
+
+    }
+    
+
+
