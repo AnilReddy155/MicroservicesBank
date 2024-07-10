@@ -112,3 +112,14 @@
         }
 
     }
+
+**Password Encripting Logic**
+
+    Define the BCryptPasswordEncoder as bean as it is recomended by the Spring and strong hashing technique is used.
+
+    @Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+    While we are saving the password into DB we need to encode the password and need to store.
